@@ -7,7 +7,7 @@ on:
 
 permissions:
   contents: read
-  artifacts: write
+  packages: write
 
 jobs:
   detect-changes:
