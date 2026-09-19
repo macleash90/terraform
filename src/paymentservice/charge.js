@@ -48,7 +48,7 @@ class UnacceptedCreditCard extends CreditCardError {
 
 class ExpiredCreditCard extends CreditCardError {
   constructor (number, month, year) {
-    super(`Your credit/debit card (ending ${number.substr(-4)}) expired on ${month}/${year}`);
+    super(`Your credit card (ending ${number.substr(-4)}) expired on ${month}/${year}`);
   }
 }
 
