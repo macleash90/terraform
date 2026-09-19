@@ -1,1 +1,38 @@
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
 
+permissions:
+  contents: read
+  artifacts: write
+
+jobs:
+  detect-changes:
+    name: Detect Changed Microservices
+    runs-on: ubuntu-26.04
+    outputs: 
+      changed_services: ${{ steps.changed-services.outputs.changed_services }}
+    steps:
+      # Step 1
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # Step 2
+      - name: Detect the services that changed
+        id: changed-services
+        run: |
+          SERVICES=$(
+            git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" \
+              | grep '^src/' \
+              | cut -d '/' -f2 \
+              | sort -u \
+              | jq -R -s -c 'split("\n")[:-1]'
+          )
+
+          echo "Changed services: $SERVICES"
+
+          echo "changed_services=$SERVICES" >> "$GITHUB_OUTPUT"
